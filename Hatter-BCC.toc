@@ -3,7 +3,7 @@
 ## Author: Hatter
 
 ## Title: Hatter
-## Notes: Formats item tooltips: rewording, reordering, and recoloring.
+## Notes: Remembers which hats and cloaks should be visible, and which should be hidden.
 
 ## SavedVariables: HatterDB
 
