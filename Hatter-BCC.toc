@@ -1,6 +1,6 @@
 ## Interface: 20502
 ## Version: 0.0.0
-## Author: Hatter
+## Author: Anonomit
 
 ## Title: Hatter
 ## Notes: Remembers which hats and cloaks should be visible, and which should be hidden.
