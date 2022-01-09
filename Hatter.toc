@@ -1,9 +1,9 @@
 ## Interface: 20502
-## Version: 1.0.0
+## Version: 1.1.0
 ## Author: Anonomit
 
 ## Title: Hatter
-## Notes: Remembers which hats and cloaks should be visible, and which should be hidden.
+## Notes: Remembers which hats and cloaks should be visible when equipped, and which should be hidden.
 
 ## SavedVariables: HatterDB
 
