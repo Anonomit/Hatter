@@ -167,27 +167,6 @@ function Data:MakeOptionsTable(Addon, L)
   CreateDescription(L["Forget an item"])
   CreateDescription(("/hatter forget [%s]"):format(L["ItemLink"]), "small")
   
-  if Addon:IsWeakAuraFound() then
-    CreateDivider(10)
-    CreateDescription(L["WeakAura Solutions"])
-    CreateDescription(L["Only one version of Hatter should be used. You can disable or delete the WeakAura here."], "small")
-    Options.args["DisableWeakAura"] = {
-      name = L["Disable WeakAura"],
-      desc = nil,
-      order = Order(),
-      type = "execute",
-      func = function() StaticPopup_Show("HATTER_CONFIRM_DISABLE_WEAKAURA", ADDON_NAME) end,
-    }
-    CreateNewline()
-    Options.args["DeleteWeakAura"] = {
-      name = L["Delete WeakAura"],
-      desc = nil,
-      order = Order(),
-      type = "execute",
-      func = function() StaticPopup_Show("HATTER_CONFIRM_DELETE_WEAKAURA", ADDON_NAME) end,
-    }
-  end
-  
   return Options
 end
 
@@ -207,8 +186,8 @@ function Data:MakeWeakAuraOptionsTable(Addon, L)
   local CreateDescription = Helpers.CreateDescription
   
   
-  CreateDescription(L["WeakAura Solutions"])
-  CreateDescription(L["Only one version of Hatter should be used. You can disable or delete the WeakAura here."], "small")
+  CreateDescription(L["Only one version of Hatter should be used. You can disable or delete the conflicting WeakAura here."], "small")
+  CreateDivider()
   Options.args["DisableWeakAura"] = {
     name = L["Disable WeakAura"],
     desc = nil,

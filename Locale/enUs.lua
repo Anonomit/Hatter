@@ -36,10 +36,9 @@ L["Are you sure you want to forget all hats?"] = "Are you sure you want to forge
 L["Are you sure you want to forget all cloaks?"] = "Are you sure you want to forget all cloaks?"
 
 L["Requires reload"] = "Requires reload"
-L["WeakAura Solutions"] = "WeakAura Solutions"
 L["Disable WeakAura"] = "Disable WeakAura"
 L["Delete WeakAura"] = "Delete WeakAura"
-L["Only one version of Hatter should be used. You can disable or delete the WeakAura here."] = "Only one version of Hatter should be used. You can disable or delete the WeakAura here."
+L["Only one version of Hatter should be used. You can disable or delete the conflicting WeakAura here."] = "Only one version of Hatter should be used. You can disable or delete the conflicting WeakAura here."
 L["%s WeakAura is active. This may cause unexpected behavior. Would you like to open config?"] = "%s WeakAura is active. This may cause unexpected behavior. Would you like to open config?"
 L["Are you sure you want to disable %s WeakAura?"] = "Are you sure you want to disable %s WeakAura?"
 L["Are you sure you want to delete %s WeakAura?"] = "Are you sure you want to delete %s WeakAura?"
