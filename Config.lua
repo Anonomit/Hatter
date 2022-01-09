@@ -37,8 +37,8 @@ local OPTION_DEFAULTS = {
     DefaultVisibility = {
       EnforceDefault = true,
       
-      [Data.HEAD] = false,
-      [Data.BACK] = false,
+      [Data.HEAD] = true,
+      [Data.BACK] = true,
     },
     
     DEBUG = {
