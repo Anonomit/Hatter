@@ -149,11 +149,11 @@ end
 
 function Hatter:PrintUsage()
   self:Printf(L["Usage:"])
-  self:Printf("  /hatter config")
+  self:Printf("  /%s config", Data.CHAT_COMMAND)
   self:Printf("    %s", L["Open options"])
-  self:Printf("  /hatter list")
+  self:Printf("  /%s list", Data.CHAT_COMMAND)
   self:Printf("    %s", L["List items"])
-  self:Printf("  /hatter forget [%s]", L["ItemLink"])
+  self:Printf("  /%s forget [%s]", Data.CHAT_COMMAND, L["ItemLink"])
   self:Printf("    %s", L["Forget an item"])
 end
 
@@ -212,18 +212,28 @@ function Hatter:ParseChatCommand(input)
     return true
   elseif command == "forget" then
     if link then
-      local id = link:match"item:(%d+)"
+      local id = tonumber(link)
+      if not id then
+        id = link:match"item:(%d+)"
+      end
       if id then
         id = tonumber(id)
         if id then
+          local found = false
           for slot in pairs(Data.HIDABLE_SLOTS) do
             if self:GetVisibility(slot, id) ~= nil then
               self:SetVisibility(slot, id, nil)
+              found = true
               break
             end
           end
+          if not found then
+            self:Printf(L["That item is not being remembered"])
+          end
           return true
         end
+      else
+        return false
       end
     end
   elseif command == "clear" then
@@ -293,13 +303,13 @@ function Hatter:CreateOptions()
   AceConfigDialog:AddToBlizOptions(ADDON_NAME .. ".Profiles", "Profiles", ADDON_NAME)
   
   
-  self:RegisterChatCommand(ADDON_NAME:lower(), "OnChatCommand", true)
+  self:RegisterChatCommand(Data.CHAT_COMMAND, "OnChatCommand", true)
 end
 
 
 
 function Hatter:OnInitialize()  
-  self.db = AceDB:New("HatterDB", Data:GetDefaultOptions())
+  self.db = AceDB:New(("%sDB"):format(ADDON_NAME), Data:GetDefaultOptions())
 end
 
 function Hatter:OnEnable()
@@ -318,7 +328,7 @@ function Hatter:OnEnable()
       AceConfig:RegisterOptionsTable(ADDON_NAME .. " WeakAura", Data:MakeWeakAuraOptionsTable(self, L))
       local Panel = AceConfigDialog:AddToBlizOptions(ADDON_NAME .. " WeakAura", "WeakAura", ADDON_NAME)
       
-      StaticPopup_Show("HATTER_WEAKAURA_WARN", ADDON_NAME, nil, {Addon = self, Panel = Panel})
+      StaticPopup_Show(("%s_WEAKAURA_WARN"):format(ADDON_NAME:upper()), ADDON_NAME, nil, {Addon = self, Panel = Panel})
     end
   end)
   

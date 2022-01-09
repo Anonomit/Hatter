@@ -17,6 +17,7 @@ function Data:IsClassic()
 end
 
 
+Data.CHAT_COMMAND = ADDON_NAME:lower()
 
 -- How spread out options are in interface options
 local OPTIONS_DIVIDER_HEIGHT = 3
@@ -99,10 +100,11 @@ function Data:MakeOptionsTable(Addon, L)
   
   local db = Addon:GetDB()
   
-  CreateDescription(L["Defaults for Unrecognized Equipment"])
+  CreateDescription(L["Defaults for New Equipment"])
+  CreateNewline()
   Options.args["EnforceDefault"] = {
-    name  = L["Use Default State"],
-    desc  = L["This determines the behavior when an item is equipped for the first time. If enabled, visibility will be set to a default. If disabled, visibility will not be changed."],
+    name  = L["Force Default Visibility"],
+    desc  = L["This applies to items when they are equipped for the first time. If enabled, visibility will be determined by these default settings. If disabled, visibility will be the same as the previously equipped item in that slot."],
     order = Order(),
     type  = "toggle",
     set   = function(info, val)        Addon:SetEnforceDefault(val) end,
@@ -111,7 +113,7 @@ function Data:MakeOptionsTable(Addon, L)
   CreateNewline()
   Options.args["HatDefaultShown"] = {
     name     = SHOW_HELM,
-    desc     = L["This determines the visibility of an item the first time it's equipped"],
+    desc     = L["This determines the visibility of an item when it's equipped for the first time"],
     order    = Order(),
     disabled = function(info) return not Addon:GetEnforceDefault() end,
     type     = "toggle",
@@ -121,7 +123,7 @@ function Data:MakeOptionsTable(Addon, L)
   CreateNewline()
   Options.args["CloakDefaultShown"] = {
     name     = SHOW_CLOAK,
-    desc     = L["This determines the visibility of an item the first time it's equipped"],
+    desc     = L["This determines the visibility of an item when it's equipped for the first time"],
     order    = Order(),
     disabled = function(info) return not Addon:GetEnforceDefault() end,
     type     = "toggle",
@@ -132,6 +134,8 @@ function Data:MakeOptionsTable(Addon, L)
   
   CreateDivider(10)
   CreateDescription(L["List items"])
+  CreateDescription(("/%s list"):format(Data.CHAT_COMMAND), "small")
+  CreateNewline()
   Options.args["ListHats"] = {
     name = L["List Hats"],
     desc = nil,
@@ -147,25 +151,26 @@ function Data:MakeOptionsTable(Addon, L)
     type = "execute",
     func = function() Addon:ListItems(Data.BACK) end,
   }
+  
+  CreateDivider(10)
+  CreateDescription(L["Forget items"])
+  CreateDescription(("/%s forget [%s]"):format(Data.CHAT_COMMAND, L["ItemLink"]), "small")
   CreateNewline()
   Options.args["ForgetHats"] = {
-    name = L["Forget All Hats"],
+    name = L["Forget Hats"],
     desc = nil,
     order = Order(),
     type = "execute",
-    func = function() StaticPopup_Show("HATTER_CONFIRM_FORGET_ALL_HATS", nil, nil, Addon) end,
+    func = function() StaticPopup_Show(("%s_CONFIRM_FORGET_ALL_HATS"):format(ADDON_NAME:upper()), nil, nil, Addon) end,
   }
   CreateNewline()
   Options.args["ForgetCloaks"] = {
-    name = L["Forget All Cloaks"],
+    name = L["Forget Cloaks"],
     desc = nil,
     order = Order(),
     type = "execute",
-    func = function() StaticPopup_Show("HATTER_CONFIRM_FORGET_ALL_CLOAKS", nil, nil, Addon) end,
+    func = function() StaticPopup_Show(("%s_CONFIRM_FORGET_ALL_CLOAKS"):format(ADDON_NAME:upper()), nil, nil, Addon) end,
   }
-  
-  CreateDescription(L["Forget an item"])
-  CreateDescription(("/hatter forget [%s]"):format(L["ItemLink"]), "small")
   
   return Options
 end
@@ -186,14 +191,14 @@ function Data:MakeWeakAuraOptionsTable(Addon, L)
   local CreateDescription = Helpers.CreateDescription
   
   
-  CreateDescription(L["Only one version of Hatter should be used. You can disable or delete the conflicting WeakAura here."], "small")
+  CreateDescription(L["Only one version of %s should be used. You can disable or delete the conflicting WeakAura here."]:format(ADDON_NAME), "small")
   CreateDivider()
   Options.args["DisableWeakAura"] = {
     name = L["Disable WeakAura"],
     desc = nil,
     order = Order(),
     type = "execute",
-    func = function() StaticPopup_Show("HATTER_CONFIRM_DISABLE_WEAKAURA", ADDON_NAME) end,
+    func = function() StaticPopup_Show(("%s_CONFIRM_DISABLE_WEAKAURA"):format(ADDON_NAME:upper()), ADDON_NAME) end,
   }
   CreateNewline()
   Options.args["DeleteWeakAura"] = {
@@ -201,7 +206,7 @@ function Data:MakeWeakAuraOptionsTable(Addon, L)
     desc = nil,
     order = Order(),
     type = "execute",
-    func = function() StaticPopup_Show("HATTER_CONFIRM_DELETE_WEAKAURA", ADDON_NAME) end,
+    func = function() StaticPopup_Show(("%s_CONFIRM_DELETE_WEAKAURA"):format(ADDON_NAME:upper()), ADDON_NAME) end,
   }
   
   return Options
@@ -211,7 +216,7 @@ end
 
 
 function Data:Init(Addon, L)
-  StaticPopupDialogs["HATTER_CONFIRM_FORGET_ALL_HATS"] =
+  StaticPopupDialogs[("%s_CONFIRM_FORGET_ALL_HATS"):format(ADDON_NAME:upper())] =
   {
     text         = L["Are you sure you want to forget all hats?"],
     button1      = YES,
@@ -223,7 +228,7 @@ function Data:Init(Addon, L)
       Addon:ForgetAllVisibility(Data.HEAD)
     end,
   }
-  StaticPopupDialogs["HATTER_CONFIRM_FORGET_ALL_CLOAKS"] =
+  StaticPopupDialogs[("%s_CONFIRM_FORGET_ALL_CLOAKS"):format(ADDON_NAME:upper())] =
   {
     text         = L["Are you sure you want to forget all cloaks?"],
     button1      = YES,
@@ -236,7 +241,7 @@ function Data:Init(Addon, L)
     end,
   }
   
-  StaticPopupDialogs["HATTER_WEAKAURA_WARN"] =
+  StaticPopupDialogs[("%s_WEAKAURA_WARN"):format(ADDON_NAME:upper())] =
   {
     text         = L["%s WeakAura is active. This may cause unexpected behavior. Would you like to open config?"],
     button1      = OKAY,
@@ -249,7 +254,7 @@ function Data:Init(Addon, L)
     end,
   }
   
-  StaticPopupDialogs["HATTER_CONFIRM_DISABLE_WEAKAURA"] =
+  StaticPopupDialogs[("%s_CONFIRM_DISABLE_WEAKAURA"):format(ADDON_NAME:upper())] =
   {
     text         = L["Are you sure you want to disable %s WeakAura?"] .. ("\n(%s)"):format(L["Requires reload"]),
     showAlert    = true,
@@ -264,7 +269,7 @@ function Data:Init(Addon, L)
     end,
   }
   
-  StaticPopupDialogs["HATTER_CONFIRM_DELETE_WEAKAURA"] =
+  StaticPopupDialogs[("%s_CONFIRM_DELETE_WEAKAURA"):format(ADDON_NAME:upper())] =
   {
     text         = L["Are you sure you want to delete %s WeakAura?"],
     showAlert    = true,
