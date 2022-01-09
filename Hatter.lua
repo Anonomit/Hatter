@@ -30,6 +30,12 @@ function Hatter:GetDB()
 end
 
 
+function Hatter:GetEnforceDefault()
+  return self:GetDB().DefaultVisibility.EnforceDefault
+end
+function Hatter:SetEnforceDefault(state)
+  self:GetDB().DefaultVisibility.EnforceDefault = state
+end
 function Hatter:GetDefaultVisibility(slot)
   return self:GetDB().DefaultVisibility[slot]
 end
@@ -69,24 +75,34 @@ function Hatter:ForgetVisibility(slot, id)
   end
   output()
 end
+function Hatter:ForgetAllVisibility(slot)
+  for id in pairs(self:GetDB()[slot]) do
+    self:ForgetVisibility(slot, id)
+  end
+end
+
 function Hatter:SetVisibilityDefault(slot, id)
   if self:GetVisibility(slot, id) == nil then
-    self:SetVisibility(slot, id, self:GetDefaultVisibility(slot))
+    if self:GetEnforceDefault() then
+      self:SetVisibility(slot, id, self:GetDefaultVisibility(slot))
+    else
+      self:SetVisibility(slot, id, self:IsShown(slot))
+    end
   end
 end
 
 function Hatter:IsShown(slot)
-  if slot == Data.HAT then
+  if slot == Data.HEAD then
     return ShowingHelm()
-  elseif slot == Data.CLOAK then
+  elseif slot == Data.BACK then
     return ShowingCloak()
   end
 end
 
 function Hatter:ShowSlot(slot, visibility)
-  if slot == Data.HAT then
+  if slot == Data.HEAD then
     return self.ShowHelm(visibility)
-  elseif slot == Data.CLOAK then
+  elseif slot == Data.BACK then
     return self.ShowCloak(visibility)
   end
 end
@@ -141,6 +157,11 @@ function Hatter:PrintUsage()
   self:Printf("    %s", L["Forget an item"])
 end
 
+function Hatter:OpenConfig(category)
+  InterfaceAddOnsList_Update()
+  InterfaceOptionsFrame_OpenToCategory(category)
+end
+
 function Hatter:ListItems(slot, noHeader)
   local items = {visible = {}, invisible = {}}
   local count = 0
@@ -186,8 +207,8 @@ function Hatter:ParseChatCommand(input)
   local command, link = self:GetArgs(input, 2)
   command = command and command:lower() or nil
   if command == "list" then
-    self:ListItems(Data.HAT)
-    self:ListItems(Data.CLOAK)
+    self:ListItems(Data.HEAD)
+    self:ListItems(Data.BACK)
     return true
   elseif command == "forget" then
     if link then
@@ -212,8 +233,7 @@ function Hatter:ParseChatCommand(input)
       end
     end
   elseif command == "config" or command == "options" then
-    InterfaceAddOnsList_Update()
-    InterfaceOptionsFrame_OpenToCategory(ADDON_NAME)
+    self:OpenConfig(ADDON_NAME)
     return true
   end
   return false
@@ -226,22 +246,40 @@ function Hatter:OnChatCommand(input)
 end
 
 
+
+function Hatter:IsWeakAuraFound()
+  if WeakAuras then
+    if WeakAuras.IsAuraLoaded then
+      if WeakAuras.IsAuraLoaded(ADDON_NAME) then
+        return true
+      end
+    elseif WeakAuras.loaded then
+      if WeakAuras.loaded[ADDON_NAME] then
+        return true
+      end
+    end
+  end
+  return false
+end
+
+
+
 function Hatter:CreateHooks()
   self:RegisterEvent("PLAYER_EQUIPMENT_CHANGED", "OnEquipmentChanged")
   
   self.ShowHelm  = ShowHelm
   self.ShowCloak = ShowCloak
   
-  hooksecurefunc("ShowHelm" , function(isShown) return Hatter:OnShown(Data.HAT  , isShown) end)
-  hooksecurefunc("ShowCloak", function(isShown) return Hatter:OnShown(Data.CLOAK, isShown) end)
+  hooksecurefunc("ShowHelm" , function(isShown) return Hatter:OnShown(Data.HEAD, isShown) end)
+  hooksecurefunc("ShowCloak", function(isShown) return Hatter:OnShown(Data.BACK, isShown) end)
 end
 
 
 
 function Hatter:CreateOptions()
   AceConfig:RegisterOptionsTable(ADDON_NAME, Data:MakeOptionsTable(self, L))
-  local panel = AceConfigDialog:AddToBlizOptions(ADDON_NAME)
-  panel.default = function()
+  local Panel = AceConfigDialog:AddToBlizOptions(ADDON_NAME)
+  Panel.default = function()
     local db = self:GetDB()
     for k, v in pairs(Data:GetDefaultOptions().profile.DefaultVisibility) do
       db.DefaultVisibility[k] = v
@@ -251,8 +289,8 @@ function Hatter:CreateOptions()
   
   
   local profiles = AceDBOptions:GetOptionsTable(self.db)
-  AceConfig:RegisterOptionsTable(ADDON_NAME .. ".profiles", profiles)
-  AceConfigDialog:AddToBlizOptions(ADDON_NAME .. ".profiles", "Profiles", ADDON_NAME)
+  AceConfig:RegisterOptionsTable(ADDON_NAME .. ".Profiles", profiles)
+  AceConfigDialog:AddToBlizOptions(ADDON_NAME .. ".Profiles", "Profiles", ADDON_NAME)
   
   
   self:RegisterChatCommand(ADDON_NAME:lower(), "OnChatCommand", true)
@@ -265,12 +303,23 @@ function Hatter:OnInitialize()
 end
 
 function Hatter:OnEnable()
+  Data:Init(self, L)
   self:CreateHooks()
   self:CreateOptions()
   
   C_Timer.After(1, function()
     ShowHelm(ShowingHelm())
     ShowCloak(ShowingCloak())
+  end)
+  
+  C_Timer.After(1, function()
+    if self:IsWeakAuraFound() then
+      
+      AceConfig:RegisterOptionsTable(ADDON_NAME .. " WeakAura", Data:MakeWeakAuraOptionsTable(self, L))
+      local Panel = AceConfigDialog:AddToBlizOptions(ADDON_NAME .. " WeakAura", "WeakAura", ADDON_NAME)
+      
+      StaticPopup_Show("HATTER_WEAKAURA_WARN", ADDON_NAME, nil, {Addon = self, Panel = Panel})
+    end
   end)
   
 end
