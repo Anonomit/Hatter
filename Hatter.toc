@@ -5,6 +5,8 @@
 ## Title: Hatter
 ## Notes: Remembers which hats and cloaks should be visible when equipped, and which should be hidden.
 
+## OptionalDeps: WeakAuras
+
 ## SavedVariables: HatterDB
 
 ## OptionalDeps: Ace3
