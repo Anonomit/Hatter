@@ -12,6 +12,8 @@ local AceConfigRegistry = LibStub"AceConfigRegistry-3.0"
 local AceDB             = LibStub"AceDB-3.0"
 local AceDBOptions      = LibStub"AceDBOptions-3.0"
 
+local SemVer            = LibStub"SemVer"
+
 
 
 function Addon:GetDB()
@@ -367,15 +369,27 @@ end
 
 
 
+function Addon:InitDB()
+  local configVersion = SemVer(self:GetOption"version" or tostring(self.Version))
+  -- Update data schema here
+  
+  self:SetOption(tostring(self.Version), "version")
+end
+
+
 function Addon:OnInitialize()  
-  self.db        = AceDB:New(("%sDB"):format(ADDON_NAME), Data:MakeDefaultOptions(), true)
+  self.db        = AceDB:New(("%sDB"):format(ADDON_NAME)        , Data:MakeDefaultOptions(), true)
   self.dbdefault = AceDB:New(("%sDB_Default"):format(ADDON_NAME), Data:MakeDefaultOptions(), true)
   
   self:RegisterChatCommand(Data.CHAT_COMMAND, "OnChatCommand", true)
 end
 
 function Addon:OnEnable()
+  self.Version = SemVer(GetAddOnMetadata(ADDON_NAME, "Version"))
+  self:InitDB()
+  
   Data:Init(self, L)
+  
   self:CreateHooks()
   self:CreateOptions()
   

@@ -34,7 +34,9 @@ Data.HIDABLE_SLOTS = {
 function Data:MakeDefaultOptions()
   return {
     profile = {
-      ["*"] = {},
+      
+      [1]  = {},
+      [15] = {},
       
       DefaultVisibility = {
         EnforceDefault = true,
@@ -143,9 +145,9 @@ function Data:MakeOptionsTable(title, Addon, L)
   GUI:CreateNewline()
   GUI:CreateToggle({"DefaultVisibility", "EnforceDefault"}, L["Force Default Visibility"], L["This applies to items when they are equipped for the first time. If enabled, visibility will be determined by these default settings. If disabled, visibility will be the same as the previously equipped item in that slot."])
   GUI:CreateNewline()
-  GUI:CreateToggle({"DefaultVisibility", Data.HEAD}, SHOW_HELM, L["This determines the visibility of an item when it's equipped for the first time"], function(info) return not Addon:GetOption("DefaultVisibility", "EnforceDefault") end)
+  GUI:CreateToggle({"DefaultVisibility", Data.HEAD}, SHOW_HELM, L["This determines the visibility of an item when it's equipped for the first time"], function() return not Addon:GetOption("DefaultVisibility", "EnforceDefault") end)
   GUI:CreateNewline()
-  GUI:CreateToggle({"DefaultVisibility", Data.BACK}, SHOW_CLOAK, L["This determines the visibility of an item when it's equipped for the first time"], function(info) return not Addon:GetOption("DefaultVisibility", "EnforceDefault") end)
+  GUI:CreateToggle({"DefaultVisibility", Data.BACK}, SHOW_CLOAK, L["This determines the visibility of an item when it's equipped for the first time"], function() return not Addon:GetOption("DefaultVisibility", "EnforceDefault") end)
   
   GUI:CreateDivider(10)
   GUI:CreateDescription(L["List items"])
