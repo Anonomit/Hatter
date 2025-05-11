@@ -1,18 +1,45 @@
-<h2>1.1.0</h2>
-<p><strong>Features</strong></p>
+<h2>2.0.0</h2>
+<h3>Features</h3>
 <ul>
-<li>It's now possible to disable the default visibility settings. When disabled, new equipment will inherit visibility from the previously worn equipment in that slot.</li>
-<li>Added Hatter WeakAura detection. The addon will check for the Hatter WeakAura on startup and will prompt the user to disable or delete it.</li>
+  <li>Large rewrite. Updated most addon code.</li>
+  <li>Added an options menu. Removed most slash commands, since they have been made redundant.</li>
+  <li>Items can now be ignored. Hatter doesn't change the equipment slot visibility when an ignored item is equipped.</li>
+  <li>Added an option to ignore all newly equipped items by default.</li>
 </ul>
-<p>&nbsp;</p>
-<p><strong>Interface Options</strong></p>
+<h3>Changes</h3>
 <ul>
-<li>Changed defaults: Show Helm and Show Cloak. These options are now on by default.</li>
-<li>New option: Force Default Visibility. When disabled, new equipment won't be forced as Shown or Hidden. This option is on by default.</li>
-<li>New options: Forget Hats and Forget Cloaks. These buttons can be used to clear all items from memory.</li>
-<li>New options: Disable WeakAura and Delete WeakAura. These buttons can be used to resolve the conflict with the Hatter WeakAura. They will only appear when the Hatter WeakAura is found.</li>
+  <li>Removed WeakAuras detection. This was always kind of hacky, and the benefit is questionable due to the chance of false positives.</li>
 </ul>
+<h3>Fixes</h3>
+<ul>
+  <li>Updated for WoW API changes.</li>
+</ul>
+
+
 <p>&nbsp;</p>
-<h2>1.0.0</h2>
-<p><strong>Initial Release</strong></p>
+<h1>1.1.1</h1>
+<h3>Changes</h3>
+<ul>
+  <li>TBC version bump: 20502 -> 20503.</li>
+</ul>
+
+
 <p>&nbsp;</p>
+<h1>1.1.0</h1>
+<h3>Features</h3>
+<ul>
+  <li>It's now possible to disable the default visibility settings. When disabled, new equipment will inherit visibility from the previously worn equipment in that slot.</li>
+  <li>Added an option to forget items, removing them from Hatter's memory.</li>
+  <li>Added Hatter WeakAura detection. The addon will check for the Hatter WeakAura on startup and will prompt the user to disable or delete it.</li>
+</ul>
+<h3>Changes</h3>
+<ul>
+  <li>Changed defaults: Show Helm and Show Cloak. These options are now on by default.</li>
+</ul>
+
+
+<p>&nbsp;</p>
+<h1>1.0.0</h1>
+<ul>
+  <li>Initial Release</li>
+</ul>
