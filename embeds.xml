@@ -23,4 +23,5 @@
   
   
   <Include file="libs\SemVer\SemVer.xml"/>
+  <Include file="libs\ItemCache\ItemCache.xml"/>
 </Ui>
