@@ -1,21 +1,34 @@
 ## Interface:         50500
 ## Interface-Mists    50500
 ## Interface-Cata:    40402
+## Interface-TBC:     20505
 ## Interface-Classic: 11507
 ## Version: 2.0.1
 
 ## X-Curse-Project-ID: 565493
 ## X-Wago-ID: b6XVkOGp
 
+## Category: Equipment
+## Category-deDE: Ausrüstung
+## Category-esES: Equipo
+## Category-esMX: Equipo
+## Category-frFR: Équipement
+## Category-itIT: Equipaggiamento
+## Category-koKR: 장비
+## Category-ptBR: Equipamento
+## Category-ruRU: Экипировка
+## Category-zhCN: 装备
+## Category-zhTW: 裝備
+
 ## Title: Hatter
 ## Notes: Remembers which hats and cloaks should be visible or hidden when equipped.
+## IconTexture: Interface\AddOns\Hatter\Assets\Textures\Addon Image.png
 ## Author: Anonomit
 
 ## SavedVariables: HatterDB
 
 ## OptionalDeps: Ace3, SemVer, ItemCache
 ## X-Embeds: Ace3, SemVer, ItemCache
-
 
 _addon.xml
 

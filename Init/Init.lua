@@ -1472,8 +1472,13 @@ do
   
   onAddonLoadCallbacks = {}
   function Addon:OnAddonLoad(addonName, func)
-    local loaded, finished = IsAddOnLoaded(addonName)
-    if finished then
+    local loadedOrLoading, loaded
+    if C_AddOns and C_AddOns.IsAddOnLoaded then
+      loadedOrLoading, loaded = C_AddOns.IsAddOnLoaded(addonName)
+    else
+      loadedOrLoading, loaded = IsAddOnLoaded(addonName)
+    end
+    if loaded then
       Call(func, self)
     else
       self:RegisterEventCallback("ADDON_LOADED", function(self, event, addon)
@@ -1549,7 +1554,7 @@ do
         assert(Addon[IsDBLoaded](self), format("Attempted to access %s database before initialization: %s", typeKey, Addon:Concat(" > ", dbKey, typeKey, ...)))
         local val = self[dbKey][typeKey]
         for _, key in ipairs{...} do
-          assert(type(val) == "table", format("Bad database access: %s", Addon:Concat(" > ", dbKey, typeKey, ...)))
+          assert(type(val) == "table", format("Bad database access (%s is not a table): %s", tostring(val), Addon:Concat(" > ", dbKey, typeKey, ...)))
           val = val[key]
         end
         
@@ -2647,8 +2652,8 @@ do
       {"|4[^:]-:[^:]-;", ".-"},       -- removes ruRU |4singular:plural1:plural2;
     }
     local reversedPatternsCache = {}
-    function Addon:ReversePattern(text)
-      reversedPatternsCache[text] = reversedPatternsCache[text] or ("^" .. self:ChainGsub(text, unpack(chainGsubPattern)) .. "$")
+    function Addon:ReversePattern(text, noStart, noEnd)
+      reversedPatternsCache[text] = reversedPatternsCache[text] or ((noStart and "" or "^") .. self:ChainGsub(text, unpack(chainGsubPattern)) .. (noEnd and "" or "$"))
       return reversedPatternsCache[text]
     end
   end

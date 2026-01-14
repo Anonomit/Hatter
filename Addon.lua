@@ -37,7 +37,7 @@ do
           local ignored           = {}
           local defaultVisibility = {}
           for slot, slotName in pairs(self.invSlotNames) do
-            for itemID, visible in pairs(self:CheckTable(profile, slot)) do
+            for itemID, visible in pairs(self:CheckTable(profile, slot) or {}) do
               self:SetOption(true,    "items", slot, itemID, "seen")
               self:SetOption(visible, "items", slot, itemID, "visible")
             end

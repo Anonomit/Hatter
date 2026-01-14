@@ -24,7 +24,7 @@ local function RememberItem(slot, id)
         Addon:SetOption(Addon:IsShown(slot), "items", slot, id, "visible")
       end
       Addon.ItemCache(id):OnCache(function(item)
-        Addon:Printf("%s %s: %s", L["Remembering"], item:GetLink(), Addon:IsShown(slot) and L["Shown"] or L["Hidden"])
+        Addon:Printf("%s %s: %s", L["Remembering"], item:GetLink(), Addon:GetOption("items", slot, id, "visible") and L["Shown"] or L["Hidden"])
       end)
     end
   end
