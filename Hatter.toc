@@ -1,9 +1,9 @@
-## Interface:         50500
-## Interface-Mists    50500
+## Interface:         50503
+## Interface-Mists    50503
 ## Interface-Cata:    40402
 ## Interface-TBC:     20505
-## Interface-Classic: 11507
-## Version: 2.0.1
+## Interface-Classic: 11508
+## Version: 2.0.2
 
 ## X-Curse-Project-ID: 565493
 ## X-Wago-ID: b6XVkOGp
